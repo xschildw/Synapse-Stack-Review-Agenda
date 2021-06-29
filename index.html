@@ -77,9 +77,19 @@
 
                 });
 		});
-		$.getJSON("https://pypi.org/pypi/synapseclient/json").done(function(data) {
-                pyclient_version = data.info.version;
-                document.getElementById("pyclient").innerHTML="Python Client (version: "+pyclient_version+")";
+		$.getJSON("https://test.pypi.org/pypi/synapseclient/json").done(function(data) {
+                pyclient_staging_version = data.info.version;
+                document.getElementById("pyclient_staging_version").innerHTML="Python client outstanding validation (v. "+pyclient_staging_version+")";
+                version_elements = pyclient_staging_version.split(".");
+                if (version_elements.length>1) {
+                	two_part_version = version_elements[0]+"."+version_elements[1];
+                	document.getElementById("pyclient_staging_version").innerHTML="Python client outstanding validation (v. "+two_part_version+")";
+                 	$("a").each(function(a) {
+                        var href = $(this).attr("href");
+                        href = href.replace("#py_staging_version#", two_part_version);
+                        $(this).attr("href",href);
+                	});
+                }
 		});
 
 		$.get("https://r-docs.synapse.org").done(function(data) {
@@ -90,7 +100,7 @@
             for (var i = 0; i < nodes.length; i++) {
  				rclient_version = nodes[i].innerHTML;
  				document.getElementById("rclient").innerHTML="R Client (version: "+rclient_version+")";
-            }			
+            }	
  		});
 			
 	});
@@ -122,7 +132,8 @@
 		</li>
 		<li> Review status of R and Python clients.
 			<ul>
-				<li><a href="https://pypi.org/project/synapseclient" id=pyclient>Python Client</a></li>
+				<li><a href="https://sagebionetworks.jira.com/issues/?jql=project%20%3D%20SYNPY%20AND%20status%20%3D%20Resolved%20AND%20fixVersion%20%3D%20py-#py_staging_version#%20ORDER%20BY%20cf%5B11140%5D%20ASC%2C%20status%20ASC%2C%20created%20DESC" id=pyclient_staging_version>Python client outstanding validation</a>.</li>
+				
 				<li><a href="https://r-docs.synapse.org" id=rclient>R Client</a></li>
 			</ul>
 		</li>
