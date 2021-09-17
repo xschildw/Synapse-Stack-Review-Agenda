@@ -120,7 +120,7 @@
 		<li> Check <a href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(IT%2C%20PLFM%2C%20WW%2C%20SWC%2C%20SYNPY%2C%20SYNR)%20AND%20status%20in%20(%22Blocked%2FMonitoring%22%2C%20%22In%20Progress%22%2C%20Open%2C%20Reopened%2C%20%22Waiting%20for%20Review%22)%20AND%20priority%20%3D%20Blocker%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC">blockers.</a></li>
 		<li> Make the Go-Live Decision for the new stack.</li>
 		<li> Release the previous stack in Jira.</li>
-		<li> Archive release notes, as required by GCP.</li>
+		<li> Archive release notes, as required by Quality program, <a href="https://www.synapse.org/#!Synapse:syn25946179">here</a>.</li>
 		<li> Identify <a id="staging_closed_jira" href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20%3D%20Closed%20AND%20resolution%20in%20(Fixed%2C%20Done)%20AND%20fixVersion%20%3D%20stack-#staging#">significant features</a> that may merit an announcement to users.</li>
 		<li> Check that there are no unresolved issues on the <a href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20in%20(%22In%20Progress%22%2C%20Open%2C%20Reopened%2C%20%22Blocked/Monitoring%22%2C%20%22Waiting for Review%22)%20AND%20fixVersion%20in%20(#staging_and_older#)%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC">staging stack</a>.</li>
 		<li> Check that changes to released code have been merged into "develop" branch:
