@@ -21,7 +21,6 @@
 
 	var jira = "https://sagebionetworks.jira.com/issues/?filter=-1&";
 	var jira2 = "%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
-	var staging_open_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened%2C%20Resolved)%20AND%20fixVersion%20in%20(#staging_and_older#)%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 	var staging_closed_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=status%20%3D%20Closed%20AND%20fixVersion%20%3D%20stack-#staging#%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 	var next_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=fixVersion%20%3D%20stack-#next#%20ORDER%20BY%20cf%5B11140%5D%20ASC%2C%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 
@@ -122,7 +121,7 @@
 		<li> Release the previous stack in Jira.</li>
 		<li> Archive release notes, as required by Quality program, <a href="https://www.synapse.org/#!Synapse:syn25946179">here</a>.</li>
 		<li> Identify <a id="staging_closed_jira" href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20%3D%20Closed%20AND%20resolution%20in%20(Fixed%2C%20Done)%20AND%20fixVersion%20%3D%20stack-#staging#">significant features</a> that may merit an announcement to users.</li>
-		<li> Check that there are no unresolved issues on the <a href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20in%20(%22In%20Progress%22%2C%20Open%2C%20Reopened%2C%20%22Blocked/Monitoring%22%2C%20%22Waiting for Review%22)%20AND%20fixVersion%20in%20(#staging_and_older#)%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC">staging stack</a>.</li>
+		<li> Check that there are no unresolved issues on the <a href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20in%20(%22In%20Progress%22%2C%20Open%2C%20%22Blocked/Monitoring%22%2C%20%22Waiting for Review%22)%20AND%20fixVersion%20in%20(#staging_and_older#)%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC">staging stack</a>.</li>
 		<li> Check that changes to released code have been merged into "develop" branch:
 		<ul>
 		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-Repository-Services/compare/release-#staging#...Sage-Bionetworks:release-#prod#?expand=1" id=plfm_staging_vs_prod style="color:red;">There is content in PLFM prod not merged into staging.</a></li>
