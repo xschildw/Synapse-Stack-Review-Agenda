@@ -22,11 +22,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		console.log('script running');
-
 		$.getJSON("./backend-repos.json")
 		.done(function(data) {
-			console.log(data)
 			const innerHTML = data.map(function(repo) {
 				return `
 				<tr>
@@ -38,7 +35,6 @@
 					</td>
 				</tr>`;
 				}).join("");
-			console.log(innerHTML);
 			$("#repos").html(innerHTML);
 		});
 	});
