@@ -20,23 +20,14 @@
 
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./scripts.js"></script>
 <script type="text/javascript">
+	const jsonDataGithubLink = "https://github.com/Sage-Bionetworks/Synapse-Stack-Review-Agenda/blob/gh-pages/dependency-alerts/frontend-repos.json"
+	const jsonDataUrl = "./frontend-repos.json";
+	
 	$(document).ready(function() {
-		$.getJSON("./frontend-repos.json")
-		.done(function(data) {
-			const innerHTML = data.map(function(repo) {
-				return `
-				<tr>
-					<td style="text-align: left;">
-						<a target="_blank" rel=\"noopener noreferrer\" href='https://github.com/${repo}/security/dependabot'>${repo.replace("Sage-Bionetworks/", "")}</a>
-					</td>
-					<td style="text-align: center;">
-						<input type="checkbox" />
-					</td>
-				</tr>`;
-				}).join("");
-			$("#repos").html(innerHTML);
-		});
+		$("#jsonGithubLink").attr("href", jsonDataGithubLink);
+		fetchReposAndInjectRows(jsonDataUrl, "#repos");
 	});
 </script>
 </head>
@@ -44,7 +35,7 @@
 	<h1>Dependency Alert Meeting Checklist (Frontend)</h1>
 	<hr />
 	<ol>
-		<li> Verify that the list of repositories is accurate. If inaccurate, update <a href="https://github.com/Sage-Bionetworks/Synapse-Stack-Review-Agenda/blob/gh-pages/dependency-alerts/frontend-repos.json">the JSON file</a>.</li>
+		<li> Verify that the list of repositories is accurate. If inaccurate, update <a id="jsonGithubLink">the JSON file</a>.</li>
 		<li> Check for Dependabot alerts on each repository. Create Jira tickets as needed, and dismiss the alert in GitHub once it has been addressed.</li>
 	</ol>
 	<table >
