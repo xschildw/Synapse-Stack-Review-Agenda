@@ -1,0 +1,13 @@
+[
+  "Sage-Bionetworks/portals",
+  "Sage-Bionetworks/Synapse-React-Client",
+  "Sage-Bionetworks/synapse-oauth-signin",
+  "Sage-Bionetworks/markdown-it-synapse-server",
+  "Sage-Bionetworks/markdown-it-synapse",
+  "Sage-Bionetworks/SynapseWebClient",
+  "Sage-Bionetworks/GwtVisualizationWrappers",
+  "Sage-Bionetworks/react-base-table",
+  "Sage-Bionetworks/nbconvert-webapp",
+  "Sage-Bionetworks/gwtbootstrap3",
+  "Sage-Bionetworks/gwtbootstrap3-extras"
+]
