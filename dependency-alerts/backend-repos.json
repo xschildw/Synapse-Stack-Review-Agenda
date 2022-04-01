@@ -5,8 +5,6 @@
   "Sage-Bionetworks/worker-utilities",
   "Sage-Bionetworks/Synapse-Migration-Utility",
   "Sage-Bionetworks/SynapseWorkflowOrchestrator",
-  "Sage-Bionetworks/file-proxy",
-  "Sage-Bionetworks/Synapse-Sftp-Proxy",
   "Sage-Bionetworks/aws-utilities",
   "Sage-Bionetworks/database-semaphore",
   "Sage-Bionetworks/schema-to-pojo",
@@ -17,8 +15,6 @@
   "Sage-Bionetworks/common-utilities",
   "Sage-Bionetworks/ChallengeDockerAgent",
   "Sage-Bionetworks/csv-utilities",
-  "Sage-Bionetworks/database-utils",
   "Sage-Bionetworks/QuizTextToJSONConverter",
-  "Sage-Bionetworks/service-redirect",
   "Sage-Bionetworks/url-signer"
 ]
