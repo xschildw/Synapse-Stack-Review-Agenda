@@ -24,8 +24,8 @@
 	var staging_closed_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=status%20%3D%20Closed%20AND%20fixVersion%20%3D%20stack-#staging#%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 	var next_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=fixVersion%20%3D%20stack-#next#%20ORDER%20BY%20cf%5B11140%5D%20ASC%2C%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 
-	function compareDiffAndUpdateElement(elementId, diffUrl, successText, failureText) {
-		$.getJSON(diffUrl).done(function(data){
+	function compareDiffAndUpdateElement(elementId, repository, baseBranch, mergeBranch, successText, failureText) {
+		$.getJSON("https://api.github.com/repos/Sage-Bionetworks/" + repository + "/compare/" + baseBranch + "...Sage-Bionetworks:" + mergeBranch).done(function(data){
 			if (data.files.length==0) {
 				document.getElementById(elementId).style="color:green;";
 				document.getElementById(elementId).innerHTML=successText;
@@ -46,35 +46,45 @@
 
 					compareDiffAndUpdateElement(
 						"plfm_staging_vs_prod",
-						"https://api.github.com/repos/Sage-Bionetworks/Synapse-Repository-Services/compare/release-"+staging+"...Sage-Bionetworks:release-"+prod,
+						"Synapse-Repository-Services",
+						"release-" + staging,
+						"release-" + prod,
 						"PLFM staging contains all patches to prod.",
 						"PLFM staging does not contain all patches to prod."
 					);
 
 					compareDiffAndUpdateElement(
 						"plfm_dev_vs_staging",
-						"https://api.github.com/repos/Sage-Bionetworks/Synapse-Repository-Services/compare/develop...Sage-Bionetworks:release-"+staging,
+						"Synapse-Repository-Services",
+						"develop",
+						"release-" + staging,
 						"PLFM develop contains all patches to staging.",
 						"PLFM develop does not contain all patches to staging."
 					);
 
 					compareDiffAndUpdateElement(
 						"swc_staging_vs_prod",
-						"https://api.github.com/repos/Sage-Bionetworks/SynapseWebClient/compare/release-"+staging+"...Sage-Bionetworks:release-"+prod,
+						"SynapseWebClient",
+						"release-" + staging,
+						"release-" + prod,
 						"SWC staging contains all patches to prod.",
 						"SWC staging does not contain all patches to prod."
 					);
 
 					compareDiffAndUpdateElement(
 						"swc_dev_vs_staging",
-						"https://api.github.com/repos/Sage-Bionetworks/SynapseWebClient/compare/develop...Sage-Bionetworks:release-"+staging,
+						"SynapseWebClient",
+						"develop",
+						"release-" + staging,
 						"SWC develop contains all patches to staging.",
 						"SWC develop does not contain all patches to staging."
 					);
 
 					compareDiffAndUpdateElement(
 						"src_dev_vs_main",
-						"https://api.github.com/repos/Sage-Bionetworks/Synapse-React-Client/compare/main...Sage-Bionetworks:develop",
+						"synapse-react-client",
+						"main",
+						"develop",
 						"synapse-react-client main contains all changes in develop.",
 						"synapse-react-client main does not contain all changes in develop."
 					)
