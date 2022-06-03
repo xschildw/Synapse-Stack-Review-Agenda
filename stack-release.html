@@ -24,6 +24,17 @@
 	var staging_closed_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=status%20%3D%20Closed%20AND%20fixVersion%20%3D%20stack-#staging#%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 	var next_jira = "https://sagebionetworks.jira.com/issues/?filter=-1&jql=fixVersion%20%3D%20stack-#next#%20ORDER%20BY%20cf%5B11140%5D%20ASC%2C%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC";
 
+	function compareDiffAndUpdateElement(elementId, repository, baseBranch, mergeBranch, successText, failureText) {
+		$.getJSON("https://api.github.com/repos/Sage-Bionetworks/" + repository + "/compare/" + baseBranch + "...Sage-Bionetworks:" + mergeBranch).done(function(data){
+			if (data.files.length==0) {
+				document.getElementById(elementId).style="color:green;";
+				document.getElementById(elementId).innerHTML=successText;
+			} else {
+				document.getElementById(elementId).style="color:red;";
+				document.getElementById(elementId).innerHTML=failureText;
+			}
+		});
+	}
 	
 	$(document).ready(function() {
 		$.getJSON("https://repo-prod.prod.sagebase.org/repo/v1/version").done(function(data) {
@@ -33,34 +44,64 @@
                     staging = parseInt(data.version.replace(/(\d+)(\..*)?/, "$1"));
                     $("#staging").text(staging);
 
-					$.getJSON("https://api.github.com/repos/Sage-Bionetworks/Synapse-Repository-Services/compare/release-"+staging+"...Sage-Bionetworks:release-"+prod).done(function(data){
-						if (data.files.length==0) {
-							document.getElementById("plfm_staging_vs_prod").style="color:green;";
-							document.getElementById("plfm_staging_vs_prod").innerHTML="PLFM staging contains all patches to prod.";
-						}
-					});
+					compareDiffAndUpdateElement(
+						"plfm_staging_vs_prod",
+						"Synapse-Repository-Services",
+						"release-" + staging,
+						"release-" + prod,
+						"PLFM staging contains all patches to prod.",
+						"PLFM staging does not contain all patches to prod."
+					);
 
-					$.getJSON("https://api.github.com/repos/Sage-Bionetworks/Synapse-Repository-Services/compare/develop...Sage-Bionetworks:release-"+staging).done(function(data){
-						if (data.files.length==0) {
-							document.getElementById("plfm_dev_vs_staging").style="color:green;";
-							document.getElementById("plfm_dev_vs_staging").innerHTML="PLFM develop contains all patches to staging.";
-						}
-					});
+					compareDiffAndUpdateElement(
+						"plfm_dev_vs_staging",
+						"Synapse-Repository-Services",
+						"develop",
+						"release-" + staging,
+						"PLFM develop contains all patches to staging.",
+						"PLFM develop does not contain all patches to staging."
+					);
 
-					$.getJSON("https://api.github.com/repos/Sage-Bionetworks/SynapseWebClient/compare/release-"+staging+"...Sage-Bionetworks:release-"+prod).done(function(data){
-						if (data.files.length==0) {
-							document.getElementById("swc_staging_vs_prod").style="color:green;";
-							document.getElementById("swc_staging_vs_prod").innerHTML="SWC staging contains all patches to prod.";
-						}
-					});
+					compareDiffAndUpdateElement(
+						"swc_staging_vs_prod",
+						"SynapseWebClient",
+						"release-" + staging,
+						"release-" + prod,
+						"SWC staging contains all patches to prod.",
+						"SWC staging does not contain all patches to prod."
+					);
 
-					$.getJSON("https://api.github.com/repos/Sage-Bionetworks/SynapseWebClient/compare/develop...Sage-Bionetworks:release-"+staging).done(function(data){
-						if (data.files.length==0) {
-							document.getElementById("swc_dev_vs_staging").style="color:green;";
-							document.getElementById("swc_dev_vs_staging").innerHTML="SWC develop contains all patches to staging.";
-						}
-					});
+					compareDiffAndUpdateElement(
+						"swc_dev_vs_staging",
+						"SynapseWebClient",
+						"develop",
+						"release-" + staging,
+						"SWC develop contains all patches to staging.",
+						"SWC develop does not contain all patches to staging."
+					);
 
+					compareDiffAndUpdateElement(
+						"src_dev_vs_main",
+						"synapse-react-client",
+						"main",
+						"develop",
+						"synapse-react-client main contains all changes in develop.",
+						"synapse-react-client main does not contain all changes in develop."
+					)
+
+					$.getJSON("https://raw.githubusercontent.com/Sage-Bionetworks/SynapseWebClient/develop/package.json").done(function(synapseWebPackageJson){
+						const synapseReactClientVersionInSwc = synapseWebPackageJson.dependencies['synapse-react-client']
+						$.getJSON("https://raw.githubusercontent.com/Sage-Bionetworks/Synapse-React-Client/main/package.json").done(function(synapseReactClientPackageJson){
+							const synapseReactClientLatestVersion = synapseReactClientPackageJson.version
+							if (synapseReactClientVersionInSwc === synapseReactClientLatestVersion) {
+								document.getElementById("src_version_in_swc").style="color:green;";
+								document.getElementById("src_version_in_swc").innerHTML="SWC develop is using the latest version of synapse-react-client.";
+							} else {
+								document.getElementById("src_version_in_swc").style="color:red;";
+								document.getElementById("src_version_in_swc").innerHTML="SWC develop is not using the latest version of synapse-react-client (using: " + synapseReactClientVersionInSwc + ", latest: " + synapseReactClientLatestVersion + ").";
+							}
+						})
+					});
 
                     $("a").each(function(a) {
                         var href = $(this).attr("href");
@@ -124,11 +165,13 @@
 		<li> Check that there are no unresolved issues on the <a href="https://sagebionetworks.jira.com/issues/?filter=-1&jql=project%20in%20(PLFM%2C%20SWC)%20AND%20status%20in%20(%22In%20Progress%22%2C%20Open%2C%20%22Blocked/Monitoring%22%2C%20%22Waiting for Review%22)%20AND%20fixVersion%20in%20(#staging_and_older#)%20ORDER%20BY%20labels%20ASC%2C%20priority%20DESC%2C%20status%20DESC%2C%20reporter%20ASC%2C%20updatedDate%20DESC">staging stack</a>.</li>
 		<li> Check that changes to released code have been merged into "develop" branch:
 		<ul>
-		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-Repository-Services/compare/release-#staging#...Sage-Bionetworks:release-#prod#?expand=1" id=plfm_staging_vs_prod style="color:red;">There is content in PLFM prod not merged into staging.</a></li>
-		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-Repository-Services/compare/develop...Sage-Bionetworks:release-#staging#?expand=1" id=plfm_dev_vs_staging style="color:red;">There is content in PLFM staging not merged into develop..</a></li>
-		<li> <a href="https://github.com/Sage-Bionetworks/SynapseWebClient/compare/release-#staging#...Sage-Bionetworks:release-#prod#?expand=1" id=swc_staging_vs_prod style="color:red;">There is content in SWC prod not merged into staging.</a></li>
-		<li> <a href="https://github.com/Sage-Bionetworks/SynapseWebClient/compare/develop...Sage-Bionetworks:release-#staging#?expand=1" id=swc_dev_vs_staging style="color:red;">There is content in SWC staging not merged into develop.</a></li>
-		</ul>
+		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-Repository-Services/compare/release-#staging#...Sage-Bionetworks:release-#prod#?expand=1" id=plfm_staging_vs_prod style="color:goldenrod;">Checking if PLFM prod merged into staging...</a></li>
+		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-Repository-Services/compare/develop...Sage-Bionetworks:release-#staging#?expand=1" id=plfm_dev_vs_staging style="color:goldenrod;">Checking if PLFM staging merged into develop...</a></li>
+		<li> <a href="https://github.com/Sage-Bionetworks/SynapseWebClient/compare/release-#staging#...Sage-Bionetworks:release-#prod#?expand=1" id=swc_staging_vs_prod style="color:goldenrod;">Checking if SWC prod merged into staging...</a></li>
+		<li> <a href="https://github.com/Sage-Bionetworks/SynapseWebClient/compare/develop...Sage-Bionetworks:release-#staging#?expand=1" id=swc_dev_vs_staging style="color:goldenrod;">Checking if SWC staging merged into develop...</a></li>
+		<li> <a href="https://github.com/Sage-Bionetworks/Synapse-React-Client/compare/main...Sage-Bionetworks:develop#?expand=1" id=src_dev_vs_main style="color:goldenrod;">Checking if synapse-react-client develop merged into main...</a></li>
+		<li> <a href="https://github.com/Sage-Bionetworks/SynapseWebClient/blob/develop/package.json" id=src_version_in_swc style="color:goldenrod;">Checking SWC develop for latest version of synapse-react-client...</a></li>
+		</ul> 
 		</li>
 
 		<li> Review performance metrics:</li>
